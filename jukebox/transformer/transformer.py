@@ -226,11 +226,13 @@ class Transformer(nn.Module):
 if __name__ == '__main__':
     from jukebox.utils.dist_utils import setup_dist_from_mpi
     setup_dist_from_mpi(port=29600)
-    n_in = 16
-    n_ctx = 192
-    n_head = 4
-    n_depth = 12
-    blocks = 16
+    
+    n_in    = 12288   # hidden size (d_model)
+    n_ctx   = 32768   # context length
+    n_head  = 96      # attention heads
+    n_depth = 108     # transformer layers
+    blocks  = 16      # strided‑attention blocks
+    
     for attn_order in [0,2,6]:
         encoder_dims = {0: 0, 2: 0, 6: 64}[attn_order]
         prior = Transformer(n_in, n_ctx, n_head, n_depth, mask=True, attn_order=attn_order, encoder_dims=encoder_dims, blocks=blocks).cuda()
